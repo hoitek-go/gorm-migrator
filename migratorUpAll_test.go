@@ -2,12 +2,12 @@ package migrator
 
 import "testing"
 
-func TestMigrateUp(t *testing.T) {
+func TestMigrateUpAll(t *testing.T) {
 	db := ConnectToDBTest()
 	SetGorm(db)
 	SetMigrations(User{})
 	MigrateDownAll()
-	MigrateUp("User")
+	MigrateUpAll()
 	count := CountMigrations()
 	if count != 1 {
 		t.Error("Should create name")

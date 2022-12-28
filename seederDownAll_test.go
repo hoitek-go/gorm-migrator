@@ -8,8 +8,8 @@ func TestSeedDownAll(t *testing.T) {
 	t.Run("Test Seed Down All", func(t *testing.T) {
 		db := ConnectToDBTest()
 		SetGorm(db)
-		SetSeeds(&UserSeed{})
-		SeedUp()
+		SetSeeds(UserSeed{})
+		SeedUpAll()
 		SeedDownAll()
 		count := CountSeeds()
 		if count > 0 {

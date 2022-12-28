@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>gorm-migrator: Go Coverage Report</title>
+		<title>go-migrator: Go Coverage Report</title>
 		<style>
 			body {
 				background: black;
@@ -65,13 +65,17 @@
 				
 				<option value="file4">github.com/hoitek-go/go-migrator/migratorUp.go (100.0%)</option>
 				
-				<option value="file5">github.com/hoitek-go/go-migrator/seeder.go (100.0%)</option>
+				<option value="file5">github.com/hoitek-go/go-migrator/migratorUpAll.go (100.0%)</option>
 				
-				<option value="file6">github.com/hoitek-go/go-migrator/seederDown.go (100.0%)</option>
+				<option value="file6">github.com/hoitek-go/go-migrator/seeder.go (100.0%)</option>
 				
-				<option value="file7">github.com/hoitek-go/go-migrator/seederDownAll.go (100.0%)</option>
+				<option value="file7">github.com/hoitek-go/go-migrator/seederDown.go (100.0%)</option>
 				
-				<option value="file8">github.com/hoitek-go/go-migrator/seederUp.go (100.0%)</option>
+				<option value="file8">github.com/hoitek-go/go-migrator/seederDownAll.go (100.0%)</option>
+				
+				<option value="file9">github.com/hoitek-go/go-migrator/seederUp.go (100.0%)</option>
+				
+				<option value="file10">github.com/hoitek-go/go-migrator/seederUpAll.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -96,7 +100,7 @@ type UserSeed struct {
         Name string
 }
 
-func (u *UserSeed) Up() <span class="cov8" title="1">{
+func (u UserSeed) Up() <span class="cov8" title="1">{
         db := ConnectToDBTest()
         db.Migrator().CreateTable(&amp;UserSeed{})
         db.Create([]UserSeed{
@@ -106,7 +110,7 @@ func (u *UserSeed) Up() <span class="cov8" title="1">{
         })
 }</span>
 
-func (u *UserSeed) Down() <span class="cov8" title="1">{
+func (u UserSeed) Down() <span class="cov8" title="1">{
         db := ConnectToDBTest()
         db.Unscoped().Where("name in ?", []string{"test"}).Delete(&amp;UserSeed{})
 }</span>
@@ -115,12 +119,12 @@ type User struct {
         Name string
 }
 
-func (u *User) Up() <span class="cov8" title="1">{
+func (u User) Up() <span class="cov8" title="1">{
         db := ConnectToDBTest()
         db.Migrator().CreateTable(&amp;User{})
 }</span>
 
-func (u *User) Down() <span class="cov8" title="1">{
+func (u User) Down() <span class="cov8" title="1">{
         db := ConnectToDBTest()
         db.Migrator().DropTable(&amp;User{})
 }</span>
@@ -191,8 +195,12 @@ func SetArgs(args []string) error <span class="cov8" title="1">{
 
 func runMigrateViaCommand(arg1, arg2 string) error <span class="cov8" title="1">{
         if arg1 == "up" </span><span class="cov8" title="1">{
-                MigrateUp()
-        }</span>
+                if arg2 == "" </span><span class="cov8" title="1">{
+                        MigrateUpAll()
+                }</span> else<span class="cov8" title="1"> {
+                        MigrateUp(arg2)
+                }</span>
+        }
         <span class="cov8" title="1">if arg1 == "down" </span><span class="cov8" title="1">{
                 if arg2 == "" </span><span class="cov8" title="1">{
                         MigrateDownAll()
@@ -287,7 +295,28 @@ func MigrateDownAll() <span class="cov8" title="1">{
 		
 		<pre class="file" id="file4" style="display: none">package migrator
 
-func MigrateUp() <span class="cov8" title="1">{
+func MigrateUp(migrationName string) <span class="cov8" title="1">{
+        DB.Migrator().AutoMigrate(&amp;Migration{})
+        for _, mStruct := range AllMigrations </span><span class="cov8" title="1">{
+                name := GetMigrationName(mStruct)
+                if name == migrationName </span><span class="cov8" title="1">{
+                        lastMigration := FindMigrationByName(name)
+                        if lastMigration == nil </span><span class="cov8" title="1">{
+                                mStruct.Up()
+                                DB.Create(&amp;Migration{
+                                        Name: name,
+                                        Type: TYPE_MIGRATION,
+                                })
+                        }</span>
+                        <span class="cov8" title="1">break</span>
+                }
+        }
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package migrator
+
+func MigrateUpAll() <span class="cov8" title="1">{
         DB.Migrator().AutoMigrate(&amp;Migration{})
         for _, mStruct := range AllMigrations </span><span class="cov8" title="1">{
                 name := GetMigrationName(mStruct)
@@ -303,7 +332,7 @@ func MigrateUp() <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file5" style="display: none">package migrator
+		<pre class="file" id="file6" style="display: none">package migrator
 
 import (
         "reflect"
@@ -355,8 +384,12 @@ func CountSeeds() int <span class="cov8" title="1">{
 
 func runSeedViaCommand(arg1, arg2 string) error <span class="cov8" title="1">{
         if arg1 == "up" </span><span class="cov8" title="1">{
-                SeedUp()
-        }</span>
+                if arg2 == "" </span><span class="cov8" title="1">{
+                        SeedUpAll()
+                }</span> else<span class="cov8" title="1"> {
+                        SeedUp(arg2)
+                }</span>
+        }
         <span class="cov8" title="1">if arg1 == "down" </span><span class="cov8" title="1">{
                 if arg2 == "" </span><span class="cov8" title="1">{
                         SeedDownAll()
@@ -372,7 +405,7 @@ func runSeedViaCommand(arg1, arg2 string) error <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file6" style="display: none">package migrator
+		<pre class="file" id="file7" style="display: none">package migrator
 
 import (
         "errors"
@@ -404,7 +437,7 @@ func SeedDown(number int) error <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file7" style="display: none">package migrator
+		<pre class="file" id="file8" style="display: none">package migrator
 
 func SeedDownAll() <span class="cov8" title="1">{
         DB.Migrator().AutoMigrate(&amp;Migration{})
@@ -419,9 +452,30 @@ func SeedDownAll() <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file8" style="display: none">package migrator
+		<pre class="file" id="file9" style="display: none">package migrator
 
-func SeedUp() <span class="cov8" title="1">{
+func SeedUp(seedName string) <span class="cov8" title="1">{
+        DB.Migrator().AutoMigrate(&amp;Migration{})
+        for _, mStruct := range AllSeeds </span><span class="cov8" title="1">{
+                name := GetSeedName(mStruct)
+                if name == seedName </span><span class="cov8" title="1">{
+                        lastMigration := FindSeedByName(name)
+                        if lastMigration == nil </span><span class="cov8" title="1">{
+                                mStruct.Up()
+                                DB.Create(&amp;Migration{
+                                        Name: name,
+                                        Type: TYPE_SEED,
+                                })
+                        }</span>
+                        <span class="cov8" title="1">break</span>
+                }
+        }
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package migrator
+
+func SeedUpAll() <span class="cov8" title="1">{
         DB.Migrator().AutoMigrate(&amp;Migration{})
         for _, mStruct := range AllSeeds </span><span class="cov8" title="1">{
                 name := GetSeedName(mStruct)

@@ -1,16 +1,19 @@
 package migrator
 
-func MigrateUp() {
+func MigrateUp(migrationName string) {
 	DB.Migrator().AutoMigrate(&Migration{})
 	for _, mStruct := range AllMigrations {
 		name := GetMigrationName(mStruct)
-		lastMigration := FindMigrationByName(name)
-		if lastMigration == nil {
-			mStruct.Up()
-			DB.Create(&Migration{
-				Name: name,
-				Type: TYPE_MIGRATION,
-			})
+		if name == migrationName {
+			lastMigration := FindMigrationByName(name)
+			if lastMigration == nil {
+				mStruct.Up()
+				DB.Create(&Migration{
+					Name: name,
+					Type: TYPE_MIGRATION,
+				})
+			}
+			break
 		}
 	}
 }

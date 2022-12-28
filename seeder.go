@@ -50,7 +50,11 @@ func CountSeeds() int {
 
 func runSeedViaCommand(arg1, arg2 string) error {
 	if arg1 == "up" {
-		SeedUp()
+		if arg2 == "" {
+			SeedUpAll()
+		} else {
+			SeedUp(arg2)
+		}
 	}
 	if arg1 == "down" {
 		if arg2 == "" {

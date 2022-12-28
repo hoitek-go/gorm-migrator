@@ -8,7 +8,9 @@ With this package you can manage migrations and seeds in gorm easily
 
 ## Features 🔥 
 - Migrate data with history meta table in database
+- Migrate specific migration via name of the struct
 - Seed data with history meta table in database
+- Seed specific data via name of the struct
 - Down all migrated data 
 - Down the last number of migrated data
 - Down all seed data 
@@ -136,6 +138,16 @@ Migrate up all migrations into database
   go run main.go migrate up
 ~~~
 
+## Migrate Specific Struct
+
+Migrate specific migration via name of the struct
+
+For example assume that User is a struct:
+
+~~~bash  
+  go run main.go migrate up User
+~~~
+
 ## Migrate Down Last n Number
 
 Migrate down the last number of n migrations from database
@@ -158,6 +170,16 @@ Seed up all seeds into databse
 
 ~~~bash  
   go run main.go seed up
+~~~
+
+## Seed Specific Struct
+
+Seed specific struct via name of the struct
+
+For example assume that UserSeed is a struct:
+
+~~~bash  
+  go run main.go seed up UserSeed
 ~~~
 
 ## Seed Down Last n Number

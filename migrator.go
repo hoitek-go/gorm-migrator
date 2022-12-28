@@ -63,7 +63,11 @@ func SetArgs(args []string) error {
 
 func runMigrateViaCommand(arg1, arg2 string) error {
 	if arg1 == "up" {
-		MigrateUp()
+		if arg2 == "" {
+			MigrateUpAll()
+		} else {
+			MigrateUp(arg2)
+		}
 	}
 	if arg1 == "down" {
 		if arg2 == "" {

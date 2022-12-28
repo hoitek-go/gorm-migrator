@@ -2,18 +2,6 @@ package migrator
 
 import "testing"
 
-type Sample struct{}
-
-func (u *Sample) Up() {
-	db := ConnectToDBTest()
-	db.Migrator().CreateTable(&Sample{})
-}
-
-func (u *Sample) Down() {
-	db := ConnectToDBTest()
-	db.Migrator().DropTable(&Sample{})
-}
-
 func TestSetArgsWhenArgsIsEmpty(t *testing.T) {
 	t.Run("Test SetArgs When Args Is Empty", func(t *testing.T) {
 		err := SetArgs([]string{})
@@ -29,6 +17,20 @@ func TestSetArgsWhenTwoArgsAreReady(t *testing.T) {
 			"",
 			"migrate",
 			"up",
+		})
+		if err != nil {
+			t.Error(err)
+		}
+	})
+}
+
+func TestSetArgsForUpBasedOnSpecifiecStruct(t *testing.T) {
+	t.Run("Test Set Args For Up Based On Specifiec Struct", func(t *testing.T) {
+		err := SetArgs([]string{
+			"",
+			"migrate",
+			"up",
+			"User",
 		})
 		if err != nil {
 			t.Error(err)
@@ -95,8 +97,8 @@ func TestGetMigrations(t *testing.T) {
 	t.Run("Test GetMigrations", func(t *testing.T) {
 		db := ConnectToDBTest()
 		SetGorm(db)
-		SetMigrations(&Sample{})
-		MigrateUp()
+		SetMigrations(User{})
+		MigrateUpAll()
 		migrations := getMigrations()
 		MigrateDownAll()
 		if len(migrations) != 1 {
@@ -109,8 +111,8 @@ func TestGetMigrationsWhenError(t *testing.T) {
 	t.Run("Test GetMigrations When Error", func(t *testing.T) {
 		db := ConnectToDBTest()
 		SetGorm(db)
-		SetMigrations(&Sample{})
-		MigrateUp()
+		SetMigrations(User{})
+		MigrateUpAll()
 		IsTestMode = true
 		migrations := getMigrations()
 		IsTestMode = false

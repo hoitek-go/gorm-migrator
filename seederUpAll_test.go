@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestSeedUp(t *testing.T) {
+func TestSeedUpAll(t *testing.T) {
 	db := ConnectToDBTest()
 	SetGorm(db)
 	SetSeeds(UserSeed{})
