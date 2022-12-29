@@ -1,4 +1,4 @@
-module github.com/hoitek-go/go-migrator
+module github.com/hoitek-go/gorm-migrator
 
 go 1.19
 

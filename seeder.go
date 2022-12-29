@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"strconv"
 
-	"github.com/hoitek-go/go-migrator/ports"
+	"github.com/hoitek-go/gorm-migrator/ports"
 	"gorm.io/gorm"
 )
 

@@ -24,7 +24,7 @@ With this package you can manage migrations and seeds in gorm easily
 Run the following comand in your project
 
 ~~~bash  
-  go get github.com/hoitek-go/go-migrator
+  go get github.com/hoitek-go/gorm-migrator
 ~~~
 
 ## Usage/Examples  
@@ -104,7 +104,7 @@ Run the following comand in your project
   import (
     "os"
 
-    migrator "github.com/hoitek-go/go-migrator"
+    migrator "github.com/hoitek-go/gorm-migrator"
     "myproject/db"
     "myproject/db/migrations"
     "myproject/db/seeds"
