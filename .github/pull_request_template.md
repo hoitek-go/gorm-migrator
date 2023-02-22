@@ -1,16 +1,12 @@
 # GORM-MIGRATORE
 
-## Summary of changes
--
+## Describe your changes
 
-## Testing instructions
--
 
-## Checklist for author
-- [ ] PR name is descriptive
-- [ ] Changelog updated
-- [ ] README updated
-- [ ] Tests updated
-
-## Checklist for reviewer
-- [ ] Tested locally 
+## Checklist before requesting a review
+- [ ] I have performed a self-review of my code.
+- [ ] I have commented my code and wrote docs.
+- [ ] I have added tests that prove my fix is effective or that my feature works
+- [ ] New and existing unit tests pass locally with my changes.
+- [ ] I have updated CHANGELOG.
+- [ ] I have updated README.
