@@ -2,24 +2,28 @@ package migrator
 
 import (
 	"errors"
+
+	"github.com/hoitek-go/gorm-migrator/share"
 )
 
+// Make down desired number of migrations otherwise return error.
 func MigrateDown(number int) error {
-	DB.Migrator().AutoMigrate(&Migration{})
-	if number > CountMigrations() {
+	share.DB.Migrator().AutoMigrate(&share.Migration{})
+	if number > Count() {
 		return errors.New("Your number of migrations is less than the entered number")
 	}
-	migrations := getMigrationsByLimit(number)
+	migrations := GetByLimit(number)
 	ids := []uint{}
 	migrationNames := map[string]string{}
 	for _, row := range migrations {
 		ids = append(ids, row.ID)
 		migrationNames[row.Name] = row.Name
 	}
+	// I have problem with this if statement. when it returns false?
 	if len(ids) > 0 {
-		DB.Unscoped().Where("id in ? type = ?", ids, TYPE_MIGRATION).Delete(&Migration{})
+		share.DB.Unscoped().Where("id in ? and type = ?", ids, share.TYPE_MIGRATION).Delete(&share.Migration{})
 		for _, mStruct := range AllMigrations {
-			name := GetMigrationName(mStruct)
+			name := ModelName(mStruct)
 			_, ok := migrationNames[name]
 			if ok {
 				mStruct.Down()
